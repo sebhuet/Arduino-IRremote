@@ -56,7 +56,7 @@
 #define SEND_AIWA_RC_T501    1
 
 #define DECODE_LG            1
-#define SEND_LG              1
+#define SEND_LG              1 
 
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
@@ -75,9 +75,6 @@
 
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
-
-#define DECODE_LEGO_PF       0 // NOT WRITTEN
-#define SEND_LEGO_PF         1
 
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
@@ -99,33 +96,32 @@
 // You do NOT need to remove entries from this list when disabling protocols!
 //
 typedef
-	enum {
+	enum decode_type_t{
 		UNKNOWN      = -1,
 		UNUSED       =  0,
-		RC5,
-		RC6,
-		NEC,
-		SONY,
-		PANASONIC,
-		JVC,
-		SAMSUNG,
-		WHYNTER,
-		AIWA_RC_T501,
-		LG,
-		SANYO,
-		MITSUBISHI,
-		DISH,
-		SHARP,
-		DENON,
-		PRONTO,
-		LEGO_PF,
+		RC5          =  1,
+		RC6          =  2,
+		NEC          =  3,
+		SONY         =  4,
+		PANASONIC    =  5,
+		JVC          =  6,
+		SAMSUNG      =  7,
+		WHYNTER      =  8,
+		AIWA_RC_T501 =  9,
+		LG           = 10,
+		SANYO        = 11,
+		MITSUBISHI   = 12,
+		DISH         = 13,
+		SHARP        = 14,
+		DENON        = 15,
+		PRONTO       = 16
 	}
 decode_type_t;
 
 //------------------------------------------------------------------------------
 // Set DEBUG to 1 for lots of lovely debug output
 //
-#define DEBUG  0
+#define DEBUG  1
 
 //------------------------------------------------------------------------------
 // Debug directives
@@ -247,10 +243,6 @@ class IRrecv
 #		if DECODE_DENON
 			bool  decodeDenon (decode_results *results) ;
 #		endif
-//......................................................................
-#		if DECODE_LEGO_PF
-			bool  decodeLegoPowerFunctions (decode_results *results) ;
-#		endif
 } ;
 
 //------------------------------------------------------------------------------
@@ -335,10 +327,44 @@ class IRsend
 #		if SEND_PRONTO
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
-//......................................................................
-#		if SEND_LEGO_PF
-			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
-#		endif
-} ;
+
+		void send(decode_type_t protocol, unsigned long data,  int nbits){
+			switch(protocol)
+			{
+				case RC5:
+					sendRC5(data, nbits);
+					break;
+				case RC6:
+					sendRC6(data, nbits);
+					break;
+				case NEC:
+					sendNEC(data, nbits);
+					break;
+				case SONY:
+					sendSony(data, nbits);
+					break;
+				case SAMSUNG:
+					sendSAMSUNG(data, nbits);
+					break;
+				case WHYNTER:
+					sendWhynter(data, nbits);
+					break;
+				case LG:
+					sendLG(data, nbits);
+					break;
+				case DISH:
+					sendDISH(data, nbits);
+					break;
+				case SHARP:
+					sendSharpRaw(data, nbits);
+					break;
+				case DENON:
+					sendDenon(data, nbits);
+					break;
+				default:
+					break;
+			};
+		}
+};
 
 #endif

@@ -57,6 +57,8 @@ int  IRrecv::getRClevel (decode_results *results,  int *offset,  int *used,  int
 #if SEND_RC5
 void  IRsend::sendRC5 (unsigned long data,  int nbits)
 {
+        //SerialPrintHex((unsigned char*) &data, sizeof(unsigned long));
+	
 	// Set IR carrier frequency
 	enableIROut(36);
 
@@ -131,6 +133,8 @@ bool  IRrecv::decodeRC5 (decode_results *results)
 #if SEND_RC6
 void  IRsend::sendRC6 (unsigned long data,  int nbits)
 {
+	//SerialPrintHex((unsigned char*) &data, sizeof(unsigned long));
+
 	// Set IR carrier frequency
 	enableIROut(36);
 
